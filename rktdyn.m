@@ -14,12 +14,10 @@ function xd = rktdyn(t, x, u, cnsts)
 v = x(2);
 z = x(3);
 m = x(4);
-
 del = x(5);
 deld = x(6);
 
 % Control
-% V = u(1);
 delc = u(1);
 
 % Constants
@@ -64,10 +62,6 @@ vd = (T - q * (Ar * Cdr + n * Ab * Cdb * sin(del))) / m ...
     - g*cos(th);
 hd = v * cos(th);
 md = -T / ue;
-zd = -z / tao + V;
-
-% Log del
-% delvec(ceil(t/dt) + 1) = del;
 
 % Pack
 xd = zeros(4,1);
