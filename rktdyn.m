@@ -10,15 +10,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function xd = rktdyn(t, x, u, cnsts)
 
-global delvec dt
-
 % State
 v = x(2);
 z = x(3);
 m = x(4);
 
+del = x(5);
+deld = x(6);
+
 % Control
-V = u(1);
+% V = u(1);
+delc = u(1);
 
 % Constants
 tbo = cnsts.tbo;        % Time of burnout
@@ -38,6 +40,8 @@ g = cnsts.g;            % Gravity
 Cdb = cnsts.Cdb;        % Airbrake drag coefficient
 Cdr = cnsts.Cdr;        % Rocket drag coefficient
 delmax = cnsts.delmax;  % Max airbrake deflection
+Ib = cnsts.Ib;          % Airbrake element moment of inertia
+q = 0.5 * rho * v^2;    % Dynamic pressure
 
 % Thrust calculation
 if t >= tbo
@@ -46,27 +50,24 @@ else
     T = a * t^3 + b * t^2 + c;
 end
 
-% Deflection angle
-if v == 0
-    del = 0;
-else
-    del = asin(sqrt(2 * A * z / (xcp * rho * v^2 * Ab * Cdb * tao)));
+% Airbrake deflection feedback (deldc = 0)
+V = 5 * (delc - del) - 3 * deld;
+if V < -2.5
+    V = -2.5;
+elseif V > 2.5
+    V = 2.5;
 end
 
-if del < 0
-    del = 0;
-elseif del > delmax
-    del = delmax;
-end
 % Equations of motion
-vd = (T - 0.5 *rho * v^2 * (Ar * Cdr + n * Ab * Cdb * sin(del))) / m ...
+deldd = (1 / Ib) * (A * z / tao - q * Cdb * Ab * xcp * sin(del));
+vd = (T - q * (Ar * Cdr + n * Ab * Cdb * sin(del))) / m ...
     - g*cos(th);
 hd = v * cos(th);
 md = -T / ue;
 zd = -z / tao + V;
 
 % Log del
-delvec(ceil(t/dt) + 1) = del;
+% delvec(ceil(t/dt) + 1) = del;
 
 % Pack
 xd = zeros(4,1);
@@ -74,5 +75,6 @@ xd(1) = hd;
 xd(2) = vd;
 xd(3) = zd;
 xd(4) = md;
-
+xd(5) = deld;
+xd(6) = deldd;
 end
