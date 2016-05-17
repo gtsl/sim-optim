@@ -57,11 +57,12 @@ elseif V > 2.5
 end
 
 % Equations of motion
-deldd = (1 / Ib) * (A * z / tao - q * Cdb * Ab * xcp * sin(del));
+deldd = (1 / Ib) * (A * z / tao - q * Cdb * Ab * xcp * sin(del)^2);
 vd = (T - q * (Ar * Cdr + n * Ab * Cdb * sin(del))) / m ...
     - g*cos(th);
 hd = v * cos(th);
 md = -T / ue;
+zd = -z / tao + V;
 
 % Pack
 xd = zeros(4,1);

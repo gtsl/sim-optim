@@ -48,13 +48,21 @@ u = degtorad(45);
 plot(tout,yout(:,1),'--');
 hold on
 plot(tout,yout(:,2),'--');
-legend('h','v','h (brakes out)','v (brakes out)')
+title('Ascent Trajectory', 'FontSize', 16)
+leg = legend('h','v','h (brakes out)','v (brakes out)');
+set(leg,'FontSize', 14, 'Location', 'northwest');
+xlabel('Time (s)', 'FontSize', 14)
+ylabel('Altitude, Velocity (m, m/s)', 'FontSize', 14)
+grid on
 
 % Airbrake deflection with constant voltage
 figure
 plot(tout,radtodeg(yout(:,5)));
-title('Drag element deflection vs time')
-max(yout(:,1))
+title('Aribrake deflection vs time', 'FontSize', 16)
+xlabel('Time (s)', 'FontSize', 14)
+ylabel('Airbrake deflection, \delta (deg)', 'FontSize', 14)
+grid on
+
 % Mass plot
 % figure
 % plot(tout,yout(:,4));
