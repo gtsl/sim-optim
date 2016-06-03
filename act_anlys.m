@@ -34,7 +34,7 @@ xlabel('Airspeed (m/s)', 'FontSize', 14)
 ylabel('Holding torque (kg-cm)', 'FontSize', 14)
 hold on; box on; grid on;
 for del = degtorad([10 20 45 75])
-    Tm = xcp .* 0.5 .* rho .* v.^2 .* Cdb .* Ab .* sin(del);
+    Tm = xcp .* 0.5 .* rho .* v.^2 .* Cdb .* Ab .* sin(del)^2;
     % Convert from kg-m to kg-cm
     Tm = Tm * 100;
     plot(v, Tm, 'LineWidth', 2)
